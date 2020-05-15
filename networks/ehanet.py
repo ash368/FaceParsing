@@ -285,8 +285,8 @@ class ResNet(nn.Module):
         # Segmentation 2
         seg2 = self.classifier2(merge)
 
-        return [[seg1, seg2], [edge]]
-        # return seg1
+        #return [[seg1, seg2], [edge]]
+        return seg1
 
 
 def EHANet18(num_classes=19, url=None, pretrained=True):
