@@ -3,6 +3,7 @@ import os.path as osp
 import time
 import torch
 import datetime
+import telegram_send
 
 import torch.nn as nn
 from torchvision.utils import save_image
@@ -134,12 +135,19 @@ class Trainer(object):
 
                 print('iter={} of {} completed, loss={}'.format(
                     i_iter, self.total_iters, c_loss.data))
+                
+                #telegram output
+                hell=str('iter={} of {} completed, loss={}'.format(
+                    i_iter, self.total_iters, c_loss.data))
+                telegram_send.send(messages=[hell])
 
             miou = self.verifier.validation(self.G)
             if miou > best_miou:
                 best_miou = miou
                 torch.save(self.G.state_dict(), osp.join(
                     self.model_save_path, '{}_{}_G.pth'.format(str(epoch), str(round(best_miou, 4)))))
+                hello = str('{}_{}_G.pth'.format(str(epoch), str(round(best_miou, 4))))
+                telegram_send.send(messages=[hello])
 
     def build_model(self):
         self.G = get_model(self.arch, pretrained=self.indicator).cuda()
